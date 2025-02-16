@@ -1,5 +1,7 @@
 #include <stdio.h>
 /**
+ * main - Entry point
+ *
  * Descreption: the program that prints the lowercase alphabet in reverse
  *
  * Return: Always 0 (Success)
