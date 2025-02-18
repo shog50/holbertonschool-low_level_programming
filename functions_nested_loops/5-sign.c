@@ -1,6 +1,7 @@
 #include "main.h"
 /**
- * sign.c -  prints the sign of a number
+ * print_sign -  prints the sign of a number
+ * Description: This function prints the sign of a number.
  * @n: the number to check
  * Return: 1 if n is greater than zero, 0 if n is zero
  *        -1 if n is less than zero
