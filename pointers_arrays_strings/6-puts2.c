@@ -2,7 +2,7 @@
 /**
  * puts2 - prints every other character of a string,
  * starting with the first character, followed by a new line.
- *@s: the string to be processed.
+ *@str: the string to be processed.
  */
 void puts2(char *str)
 {
