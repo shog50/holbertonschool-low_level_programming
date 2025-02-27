@@ -13,7 +13,8 @@ p = &n;
 * Add one line to this code so that it prints a[2] = 98, 
 * followed by a new line.
 */
-*(p + 5) = 98;
+*(p + 5) = 98; /* <--- This is the line of code you need to add */
+/* ...so that this prints 98 */
 printf("a[2] = %d\n", a[2]);
 return (0);
 }
