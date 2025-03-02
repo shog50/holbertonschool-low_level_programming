@@ -24,7 +24,7 @@ char *leet(char *);
 char *rot13(char *);
 void print_number(int n);
 char *_memset(char *s, char b, unsigned int n);
-
+char *_memcpy(char *dest, char *src, unsigned int n);
 
 
 
