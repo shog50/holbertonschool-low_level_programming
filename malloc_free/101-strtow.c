@@ -4,7 +4,7 @@
 /**
 * word_count - Counts the number of words in a string.
 * @str: The input string.
-* Return: The number of words in the string.
+* Return: Number of words in the string.
 */
 int word_count(char *str)
 {
@@ -20,9 +20,9 @@ return (count);
 }
 
 /**
-* word_length - Finds the length of a word in a string.
+* word_length - Finds the length of the next word in the string.
 * @str: The input string.
-* Return: The length of the first word found.
+* Return: The length of the word.
 */
 int word_length(char *str)
 {
@@ -34,72 +34,49 @@ return (length);
 }
 
 /**
-* allocate_words - Allocates memory for the words in the array.
-* @str: The input string.
-* @words: The pointer to the array of words.
-* @wc: The number of words.
-* Return: 1 on success, 0 on failure.
-*/
-int allocate_words(char *str, char **words, int wc)
-{
-int i = 0, j = 0, len, word_start;
-
-while (str[i] && j < wc)
-{
-if (str[i] != ' ' && (i == 0 || str[i - 1] == ' '))
-{
-word_start = i;
-len = word_length(&str[i]);
-
-words[j] = malloc(sizeof(char) * (len + 1));
-if (words[j] == NULL)
-{
-for (int k = 0; k < j; k++)
-free(words[k]);
-return (0);
-}
-
-for (int k = 0; k < len; k++)
-words[j][k] = str[word_start + k];
-words[j][len] = '\0';
-
-j++;
-i += len - 1; /* Skip to the end of the word */
-}
-i++;
-}
-return (1);
-}
-
-/**
 * strtow - Splits a string into words.
 * @str: The input string.
 * Return: Pointer to an array of strings (words),
-*         or NULL if str == NULL, str == "" or the function fails.
+*         or NULL if str == NULL, str == "" or if memory allocation fails.
 */
 char **strtow(char *str)
 {
 char **words;
-int wc;
+int i, j, k = 0, len, wc;
 
 if (str == NULL || *str == '\0')
 return (NULL);
 
-wc = word_count(str);
+wc = word_count(str); /* Count the number of words */
 if (wc == 0)
 return (NULL);
 
-words = malloc(sizeof(char *) * (wc + 1));
+words = malloc(sizeof(char *) * (wc + 1)); /* Allocate memory for words array */
 if (words == NULL)
 return (NULL);
 
-if (!allocate_words(str, words, wc))
+for (i = 0; str[i] && k < wc; i++)
 {
+if (str[i] != ' ' && (i == 0 || str[i - 1] == ' '))
+{
+len = word_length(&str[i]);
+words[k] = malloc(sizeof(char) * (len + 1)); /* Allocate memory for the word */
+if (words[k] == NULL)
+{
+for (j = 0; j < k; j++) /* Free previously allocated memory on failure */
+free(words[j]);
 free(words);
 return (NULL);
 }
 
-words[wc] = NULL;
+for (j = 0; j < len; j++) /* Copy characters of the word */
+words[k][j] = str[i + j];
+words[k][j] = '\0'; /* Null-terminate the word */
+k++;
+i += len - 1; /* Move index to the end of the word */
+}
+}
+words[k] = NULL; /* Null-terminate the array of words */
 return (words);
 }
 
