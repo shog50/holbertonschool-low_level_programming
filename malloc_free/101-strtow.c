@@ -51,7 +51,7 @@ wc = word_count(str); /* Count the number of words */
 if (wc == 0)
 return (NULL);
 
-words = malloc(sizeof(char *) * (wc + 1)); /* Allocate memory for words array */
+words = malloc(sizeof(char *) * (wc + 1));
 if (words == NULL)
 return (NULL);
 
