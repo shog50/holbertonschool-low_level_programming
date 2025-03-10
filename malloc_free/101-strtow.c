@@ -20,6 +20,58 @@ return (count);
 }
 
 /**
+* word_length - Finds the length of a word in a string.
+* @str: The input string.
+* Return: The length of the first word found.
+*/
+int word_length(char *str)
+{
+int length = 0;
+
+while (str[length] != ' ' && str[length] != '\0')
+length++;
+return (length);
+}
+
+/**
+* allocate_words - Allocates memory for the words in the array.
+* @str: The input string.
+* @words: The pointer to the array of words.
+* @wc: The number of words.
+* Return: 1 on success, 0 on failure.
+*/
+int allocate_words(char *str, char **words, int wc)
+{
+int i = 0, j = 0, len, word_start;
+
+while (str[i] && j < wc)
+{
+if (str[i] != ' ' && (i == 0 || str[i - 1] == ' '))
+{
+word_start = i;
+len = word_length(&str[i]);
+
+words[j] = malloc(sizeof(char) * (len + 1));
+if (words[j] == NULL)
+{
+for (int k = 0; k < j; k++)
+free(words[k]);
+return (0);
+}
+
+for (int k = 0; k < len; k++)
+words[j][k] = str[word_start + k];
+words[j][len] = '\0';
+
+j++;
+i += len - 1; /* Skip to the end of the word */
+}
+i++;
+}
+return (1);
+}
+
+/**
 * strtow - Splits a string into words.
 * @str: The input string.
 * Return: Pointer to an array of strings (words),
@@ -28,7 +80,7 @@ return (count);
 char **strtow(char *str)
 {
 char **words;
-int i, j, k, len = 0, wc, word_start;
+int wc;
 
 if (str == NULL || *str == '\0')
 return (NULL);
@@ -41,36 +93,13 @@ words = malloc(sizeof(char *) * (wc + 1));
 if (words == NULL)
 return (NULL);
 
-k = 0;
-for (i = 0; str[i]; i++)
+if (!allocate_words(str, words, wc))
 {
-if (str[i] != ' ' && (i == 0 || str[i - 1] == ' '))
-{
-word_start = i;
-
-len = 0;
-while (str[i] != ' ' && str[i] != '\0')
-{
-len++;
-i++;
-}
-
-words[k] = malloc(sizeof(char) * (len + 1));
-if (words[k] == NULL)
-{
-for (j = 0; j < k; j++)
-free(words[j]);
 free(words);
 return (NULL);
 }
 
-for (j = 0; j < len; j++)
-words[k][j] = str[word_start + j];
-words[k][j] = '\0';
-k++;
-}
-}
-words[k] = NULL;
+words[wc] = NULL;
 return (words);
 }
 
