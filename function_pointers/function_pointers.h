@@ -17,6 +17,10 @@ void print_name(char *name, void (*f)(char *));
  * On error, -1 is returned, and errno is set appropriately.
  */
 int _putchar(char c);
+void array_iterator(int *array, size_t size, void (*action)(int));
+
+
+
 
 #endif /* FUNCTION_POINTERS_H */
 
