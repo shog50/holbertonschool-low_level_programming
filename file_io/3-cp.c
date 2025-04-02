@@ -19,7 +19,7 @@ exit(100);
 }
 
 /**
-* copy_content - Copies the content from one file descriptor to another.
+* copy_content - Reads data from source and writes it to the destination file.
 * @fd_from: The source file descriptor.
 * @fd_to: The destination file descriptor.
 */
@@ -28,23 +28,21 @@ void copy_content(int fd_from, int fd_to)
 char buffer[BUFFER_SIZE];
 ssize_t read_bytes, written_bytes;
 
-/* Read from source and write to destination */
 while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 {
 written_bytes = write(fd_to, buffer, read_bytes);
 if (written_bytes == -1 || written_bytes != read_bytes)
 {
-dprintf(STDERR_FILENO, "Error: Can't write to destination file\n");
+dprintf(STDERR_FILENO, "Error: Can't write to file\n");
 close_file(fd_from);
 close_file(fd_to);
 exit(99);
 }
 }
 
-/* Check for read errors */
-if (read_bytes == -1) /* If an error occurred during read */
+if (read_bytes == -1) /* If a read error occurs */
 {
-dprintf(STDERR_FILENO, "Error: Can't read from source file\n");
+dprintf(STDERR_FILENO, "Error: Can't read from file\n");
 close_file(fd_from);
 close_file(fd_to);
 exit(98);
@@ -52,11 +50,11 @@ exit(98);
 }
 
 /**
-* main - Entry point, copies the content of one file to another.
-* @argc: The number of arguments provided to the program.
+* main - Copies the content of one file to another.
+* @argc: The number of arguments.
 * @argv: The arguments array.
 *
-* Return: 0 on success, or exits with appropriate error codes on failure.
+* Return: 0 on success, or exits with error codes on failure.
 */
 int main(int argc, char *argv[])
 {
