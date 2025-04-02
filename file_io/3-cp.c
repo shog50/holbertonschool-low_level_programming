@@ -19,18 +19,18 @@ exit(100);
 }
 
 /**
-* copy_content - Copies data from one file to another.
-* @fd_from: The file descriptor for the source file.
-* @fd_to: The file descriptor for the destination file.
+* copy_content - Copies the content from one file descriptor to another.
+* @fd_from: The source file descriptor.
+* @fd_to: The destination file descriptor.
 */
 void copy_content(int fd_from, int fd_to)
 {
 char buffer[BUFFER_SIZE];
 ssize_t read_bytes, written_bytes;
 
-/* Read from source and write to destination */
 while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 {
+/* Write the bytes read to the destination file */
 written_bytes = write(fd_to, buffer, read_bytes);
 if (written_bytes == -1 || written_bytes != read_bytes)
 {
@@ -41,7 +41,7 @@ exit(99);
 }
 }
 
-/* Handle errors in reading */
+/* Handle errors in the read operation */
 if (read_bytes == -1)
 {
 dprintf(STDERR_FILENO, "Error: Can't read from source file\n");
@@ -52,17 +52,17 @@ exit(98);
 }
 
 /**
-* main - Entry point for the program to copy files.
-* @argc: The number of arguments.
-* @argv: The array of arguments.
+* main - Entry point, copies the content of one file to another.
+* @argc: The number of arguments provided to the program.
+* @argv: The arguments array.
 *
-* Return: 0 on success, or exits with an appropriate error code on failure.
+* Return: 0 on success, or exits with appropriate error codes on failure.
 */
 int main(int argc, char *argv[])
 {
 int fd_from, fd_to;
 
-/* Validate arguments */
+/* Validate argument count */
 if (argc != 3)
 {
 dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
@@ -86,7 +86,7 @@ close_file(fd_from);
 exit(99);
 }
 
-/* Perform the copy operation */
+/* Copy the content */
 copy_content(fd_from, fd_to);
 
 /* Close both file descriptors */
