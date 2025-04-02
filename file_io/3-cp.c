@@ -85,14 +85,31 @@ dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
 close_file(fd_from);
 exit(99);
 }
+void copy_content(int fd_from, int fd_to)
+{
+char buffer[BUFFER_SIZE];
+ssize_t read_bytes, written_bytes;
 
-/* Copy the content */
-copy_content(fd_from, fd_to);
-
-/* Close both file descriptors */
+/* Read from source and write to destination */
+while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
+{
+written_bytes = write(fd_to, buffer, read_bytes);
+if (written_bytes == -1 || written_bytes != read_bytes)
+{
+dprintf(STDERR_FILENO, "Error: Can't write to destination file\n");
 close_file(fd_from);
 close_file(fd_to);
+exit(99);
+}
+}
 
-return (0);
+/* Check for read errors */
+if (read_bytes == -1) /* If an error occurred during read */
+{
+dprintf(STDERR_FILENO, "Error: Can't read from source file\n");
+close_file(fd_from);
+close_file(fd_to);
+exit(98);
+}
 }
 
