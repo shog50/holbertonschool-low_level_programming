@@ -19,30 +19,32 @@ exit(100);
 }
 
 /**
-* copy_content - Copies the content from one file descriptor to another.
-* @fd_from: The source file descriptor.
-* @fd_to: The destination file descriptor.
+* copy_content - Copies data from one file to another.
+* @fd_from: The file descriptor for the source file.
+* @fd_to: The file descriptor for the destination file.
 */
 void copy_content(int fd_from, int fd_to)
 {
 char buffer[BUFFER_SIZE];
 ssize_t read_bytes, written_bytes;
 
+/* Read from source and write to destination */
 while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 {
 written_bytes = write(fd_to, buffer, read_bytes);
 if (written_bytes == -1 || written_bytes != read_bytes)
 {
-dprintf(STDERR_FILENO, "Error: Can't write to file\n");
+dprintf(STDERR_FILENO, "Error: Can't write to destination file\n");
 close_file(fd_from);
 close_file(fd_to);
 exit(99);
 }
 }
 
+/* Handle errors in reading */
 if (read_bytes == -1)
 {
-dprintf(STDERR_FILENO, "Error: Can't read from file\n");
+dprintf(STDERR_FILENO, "Error: Can't read from source file\n");
 close_file(fd_from);
 close_file(fd_to);
 exit(98);
@@ -50,22 +52,24 @@ exit(98);
 }
 
 /**
-* main - Entry point, copies the content of one file to another.
-* @argc: The number of arguments provided to the program.
-* @argv: The arguments array.
+* main - Entry point for the program to copy files.
+* @argc: The number of arguments.
+* @argv: The array of arguments.
 *
-* Return: 0 on success, or exits with appropriate error codes on failure.
+* Return: 0 on success, or exits with an appropriate error code on failure.
 */
 int main(int argc, char *argv[])
 {
 int fd_from, fd_to;
 
+/* Validate arguments */
 if (argc != 3)
 {
 dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
 exit(97);
 }
 
+/* Open the source file */
 fd_from = open(argv[1], O_RDONLY);
 if (fd_from == -1)
 {
@@ -73,6 +77,7 @@ dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 exit(98);
 }
 
+/* Open the destination file */
 fd_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 if (fd_to == -1)
 {
@@ -81,8 +86,10 @@ close_file(fd_from);
 exit(99);
 }
 
+/* Perform the copy operation */
 copy_content(fd_from, fd_to);
 
+/* Close both file descriptors */
 close_file(fd_from);
 close_file(fd_to);
 
