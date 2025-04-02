@@ -19,7 +19,38 @@ exit(100);
 }
 
 /**
-* main - Copies the content of one file to another.
+* copy_content - Copies the content from one file descriptor to another.
+* @fd_from: The source file descriptor.
+* @fd_to: The destination file descriptor.
+*/
+void copy_content(int fd_from, int fd_to)
+{
+char buffer[BUFFER_SIZE];
+ssize_t read_bytes, written_bytes;
+
+while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
+{
+written_bytes = write(fd_to, buffer, read_bytes);
+if (written_bytes == -1 || written_bytes != read_bytes)
+{
+dprintf(STDERR_FILENO, "Error: Can't write to file\n");
+close_file(fd_from);
+close_file(fd_to);
+exit(99);
+}
+}
+
+if (read_bytes == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't read from file\n");
+close_file(fd_from);
+close_file(fd_to);
+exit(98);
+}
+}
+
+/**
+* main - Entry point, copies the content of one file to another.
 * @argc: The number of arguments provided to the program.
 * @argv: The arguments array.
 *
@@ -27,17 +58,14 @@ exit(100);
 */
 int main(int argc, char *argv[])
 {
-int fd_from, fd_to, read_bytes, written_bytes;
-char buffer[BUFFER_SIZE];
+int fd_from, fd_to;
 
-/* Check for correct number of arguments */
 if (argc != 3)
 {
 dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
 exit(97);
 }
 
-/* Open the source file */
 fd_from = open(argv[1], O_RDONLY);
 if (fd_from == -1)
 {
@@ -45,7 +73,6 @@ dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 exit(98);
 }
 
-/* Open the destination file */
 fd_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 if (fd_to == -1)
 {
@@ -54,29 +81,8 @@ close_file(fd_from);
 exit(99);
 }
 
-/* Read from source and write to destination */
-while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
-{
-written_bytes = write(fd_to, buffer, read_bytes);
-if (written_bytes == -1 || written_bytes != read_bytes)
-{
-dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
-close_file(fd_from);
-close_file(fd_to);
-exit(99);
-}
-}
+copy_content(fd_from, fd_to);
 
-/* Check for read error */
-if (read_bytes == -1)
-{
-dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-close_file(fd_from);
-close_file(fd_to);
-exit(98);
-}
-
-/* Close both file descriptors */
 close_file(fd_from);
 close_file(fd_to);
 
