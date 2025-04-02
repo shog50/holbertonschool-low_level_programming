@@ -33,16 +33,16 @@ int fd = open(filename, flags, mode);
 if (fd == -1)
 {
 dprintf(STDERR_FILENO, "Error: Can't open %s\n", filename);
-exit(flags & O_RDONLY ? 98 : 99);
+exit(flags == O_RDONLY ? 98 : 99);
 }
 
 return (fd);
 }
 
 /**
-* copy_content - Copies the content of one file to another.
-* @fd_from: The file descriptor for the source file.
-* @fd_to: The file descriptor for the destination file.
+* copy_content - Reads from a source file and writes to a destination file.
+* @fd_from: The file descriptor of the source file.
+* @fd_to: The file descriptor of the destination file.
 */
 void copy_content(int fd_from, int fd_to)
 {
@@ -54,7 +54,7 @@ while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 written_bytes = write(fd_to, buffer, read_bytes);
 if (written_bytes == -1 || written_bytes != read_bytes)
 {
-dprintf(STDERR_FILENO, "Error: Can't write to file\n");
+dprintf(STDERR_FILENO, "Error: Can't write to destination file\n");
 close_file(fd_from);
 close_file(fd_to);
 exit(99);
@@ -63,7 +63,7 @@ exit(99);
 
 if (read_bytes == -1)
 {
-dprintf(STDERR_FILENO, "Error: Can't read from file\n");
+dprintf(STDERR_FILENO, "Error: Can't read from source file\n");
 close_file(fd_from);
 close_file(fd_to);
 exit(98);
@@ -71,17 +71,17 @@ exit(98);
 }
 
 /**
-* main - Entry point of the program.
+* main - Entry point of the program to copy content from one file to another.
 * @argc: The number of arguments.
-* @argv: The arguments array.
+* @argv: The array of arguments.
 *
-* Return: 0 on success, or exits with error codes on failure.
+* Return: 0 on success, or exits with an error code on failure.
 */
 int main(int argc, char *argv[])
 {
 int fd_from, fd_to;
 
-/* Check for correct number of arguments */
+/* Validate arguments */
 if (argc != 3)
 {
 dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
