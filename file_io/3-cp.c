@@ -22,7 +22,6 @@ exit(100);
 * main - Copies the content of one file to another.
 * @argc: The number of arguments provided to the program.
 * @argv: The arguments array.
-*
 * Return: 0 on success, or exits with appropriate error codes on failure.
 */
 int main(int argc, char *argv[])
@@ -30,6 +29,7 @@ int main(int argc, char *argv[])
 int fd_from, fd_to, read_bytes, written_bytes;
 char buffer[BUFFER_SIZE];
 
+/* Check for correct number of arguments */
 if (argc != 3)
 {
 dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
