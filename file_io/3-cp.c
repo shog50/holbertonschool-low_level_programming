@@ -54,9 +54,26 @@ exit(99);
 }
 
 /* Read from source and write to destination */
-while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
+while (1)
 {
+read_bytes = read(fd_from, buffer, BUFFER_SIZE);
+
+/* Check for error during reading */
+if (read_bytes == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+close_file(fd_from);
+close_file(fd_to);
+exit(98);
+}
+
+/* End of file reached */
+if (read_bytes == 0)
+break;
+
 written_bytes = write(fd_to, buffer, read_bytes);
+
+/* Check for error during writing */
 if (written_bytes == -1 || written_bytes != read_bytes)
 {
 dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
@@ -64,14 +81,6 @@ close_file(fd_from);
 close_file(fd_to);
 exit(99);
 }
-}
-
-if (read_bytes == -1) /* Check if read encountered an error */
-{
-dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-close_file(fd_from);
-close_file(fd_to);
-exit(98);
 }
 
 /* Close both file descriptors */
