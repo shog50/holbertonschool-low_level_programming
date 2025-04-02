@@ -19,11 +19,11 @@ exit(100);
 }
 
 /**
-* main - Copies the content of a file to another file.
-* @argc: The number of arguments.
-* @argv: The arguments.
+* main - Copies the content of one file to another.
+* @argc: The number of arguments provided to the program.
+* @argv: The arguments array.
 *
-* Return: 0 on success, exits with codes 97, 98, 99, or 100 on failure.
+* Return: 0 on success, or exits with appropriate error codes on failure.
 */
 int main(int argc, char *argv[])
 {
@@ -36,7 +36,7 @@ dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
 exit(97);
 }
 
-/* Open source file */
+/* Open the source file */
 fd_from = open(argv[1], O_RDONLY);
 if (fd_from == -1)
 {
@@ -44,7 +44,7 @@ dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 exit(98);
 }
 
-/* Open destination file */
+/* Open the destination file */
 fd_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 if (fd_to == -1)
 {
@@ -66,7 +66,7 @@ exit(99);
 }
 }
 
-if (read_bytes == -1)
+if (read_bytes == -1) /* Check if read encountered an error */
 {
 dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 close_file(fd_from);
@@ -74,7 +74,7 @@ close_file(fd_to);
 exit(98);
 }
 
-/* Close file descriptors */
+/* Close both file descriptors */
 close_file(fd_from);
 close_file(fd_to);
 
