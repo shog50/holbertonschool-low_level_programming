@@ -22,6 +22,7 @@ exit(100);
 * main - Copies the content of one file to another.
 * @argc: The number of arguments provided to the program.
 * @argv: The arguments array.
+*
 * Return: 0 on success, or exits with appropriate error codes on failure.
 */
 int main(int argc, char *argv[])
@@ -54,26 +55,9 @@ exit(99);
 }
 
 /* Read from source and write to destination */
-while (1)
+while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 {
-read_bytes = read(fd_from, buffer, BUFFER_SIZE);
-
-/* Check for error during reading */
-if (read_bytes == -1)
-{
-dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-close_file(fd_from);
-close_file(fd_to);
-exit(98);
-}
-
-/* End of file reached */
-if (read_bytes == 0)
-break;
-
 written_bytes = write(fd_to, buffer, read_bytes);
-
-/* Check for error during writing */
 if (written_bytes == -1 || written_bytes != read_bytes)
 {
 dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
@@ -81,6 +65,15 @@ close_file(fd_from);
 close_file(fd_to);
 exit(99);
 }
+}
+
+/* Check for read error */
+if (read_bytes == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+close_file(fd_from);
+close_file(fd_to);
+exit(98);
 }
 
 /* Close both file descriptors */
