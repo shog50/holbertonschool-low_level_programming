@@ -1,5 +1,6 @@
 /**
-* flip_bits - Calculates the number of bits to flip to convert one number to another.
+* flip_bits - Calculates the number of bits to flip
+* to convert one number to another.
 * @n: The first number.
 * @m: The second number.
 * Return: The number of bits that need to be flipped.
