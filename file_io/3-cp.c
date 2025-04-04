@@ -19,40 +19,33 @@ exit(100);
 }
 
 /**
-* copy_content - Copies the content from one file descriptor to another.
-* @fd_from: The source file descriptor.
-* @fd_to: The destination file descriptor.
+* copy_content - Copies content from one file descriptor to another.
+* @fd_from: Source file descriptor.
+* @fd_to: Destination file descriptor.
 */
 void copy_content(int fd_from, int fd_to)
 {
 char buffer[BUFFER_SIZE];
 ssize_t read_bytes, written_bytes;
 
-while (1) /* Infinite loop until EOF or error */
-{
-read_bytes = read(fd_from, buffer, BUFFER_SIZE);
-if (read_bytes > 0) /* Bytes successfully read */
+while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 {
 written_bytes = write(fd_to, buffer, read_bytes);
 if (written_bytes == -1 || written_bytes != read_bytes)
 {
-dprintf(STDERR_FILENO, "Error: Can't write to file\n");
+dprintf(STDERR_FILENO, "Error: Can't write to %s\n", "NAME_OF_THE_FILE");
 close_file(fd_from);
 close_file(fd_to);
 exit(99);
 }
 }
-else if (read_bytes == 0) /* EOF */
-{
-break; /* Exit the loop */
-}
-else /* read_bytes == -1 (Error) */
+
+if (read_bytes == -1)
 {
 dprintf(STDERR_FILENO, "Error: Can't read from file\n");
 close_file(fd_from);
 close_file(fd_to);
 exit(98);
-}
 }
 }
 
