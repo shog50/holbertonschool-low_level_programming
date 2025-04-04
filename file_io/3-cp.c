@@ -19,7 +19,7 @@ exit(100);
 }
 
 /**
-* copy_content - Reads data from source and writes it to the destination file.
+* copy_content - Copies the content from one file descriptor to another.
 * @fd_from: The source file descriptor.
 * @fd_to: The destination file descriptor.
 */
@@ -40,7 +40,7 @@ exit(99);
 }
 }
 
-if (read_bytes == -1) /* If a read error occurs */
+if (read_bytes == -1)
 {
 dprintf(STDERR_FILENO, "Error: Can't read from file\n");
 close_file(fd_from);
@@ -50,11 +50,11 @@ exit(98);
 }
 
 /**
-* main - Copies the content of one file to another.
-* @argc: The number of arguments.
+* main - Entry point, copies the content of one file to another.
+* @argc: The number of arguments provided to the program.
 * @argv: The arguments array.
 *
-* Return: 0 on success, or exits with error codes on failure.
+* Return: 0 on success, or exits with appropriate error codes on failure.
 */
 int main(int argc, char *argv[])
 {
@@ -88,4 +88,3 @@ close_file(fd_to);
 
 return (0);
 }
-
