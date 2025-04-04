@@ -28,24 +28,31 @@ void copy_content(int fd_from, int fd_to)
 char buffer[BUFFER_SIZE];
 ssize_t read_bytes, written_bytes;
 
-while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
+while (1) /* Infinite loop until EOF or error */
+{
+read_bytes = read(fd_from, buffer, BUFFER_SIZE);
+if (read_bytes > 0) /* Bytes successfully read */
 {
 written_bytes = write(fd_to, buffer, read_bytes);
 if (written_bytes == -1 || written_bytes != read_bytes)
 {
-dprintf(STDERR_FILENO, "Error: Can't write to %s\n", "NAME_OF_THE_FILE");
+dprintf(STDERR_FILENO, "Error: Can't write to file\n");
 close_file(fd_from);
 close_file(fd_to);
 exit(99);
 }
 }
-
-if (read_bytes == -1)
+else if (read_bytes == 0) /* EOF */
 {
-dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", "NAME_OF_THE_FILE");
+break; /* Exit the loop */
+}
+else /* read_bytes == -1 (Error) */
+{
+dprintf(STDERR_FILENO, "Error: Can't read from file\n");
 close_file(fd_from);
 close_file(fd_to);
 exit(98);
+}
 }
 }
 
