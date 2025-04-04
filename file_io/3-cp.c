@@ -28,7 +28,7 @@ void copy_content(int fd_from, int fd_to)
 char buffer[BUFFER_SIZE];
 ssize_t read_bytes, written_bytes;
 
-while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
+while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0) /* Positive value: Successfully read. */
 {
 written_bytes = write(fd_to, buffer, read_bytes);
 if (written_bytes == -1 || written_bytes != read_bytes)
@@ -36,16 +36,16 @@ if (written_bytes == -1 || written_bytes != read_bytes)
 dprintf(STDERR_FILENO, "Error: Can't write to file\n");
 close_file(fd_from);
 close_file(fd_to);
-exit(99);
+exit(99); /* Exit with code 99 if write fails. */
 }
 }
 
-if (read_bytes == -1)
+if (read_bytes == -1) /* Negative value: Error occurred during read. */
 {
 dprintf(STDERR_FILENO, "Error: Can't read from file\n");
 close_file(fd_from);
 close_file(fd_to);
-exit(98);
+exit(98); /* Exit with code 98 if read fails. */
 }
 }
 
