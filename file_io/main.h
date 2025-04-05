@@ -1,10 +1,12 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <math.h>
 #include <fcntl.h>
-#include <unistd.h>
 
 #define BUFFER_SIZE 1024
 
