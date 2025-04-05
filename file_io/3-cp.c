@@ -1,11 +1,10 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include "main.h"
 /**
 * open_source - Open the source file for reading.
 * @file: Name of source file.
