@@ -52,7 +52,6 @@ return (fd);
 * @fd_to: Destination file descriptor.
 * @src: Source filename (for error messages).
 * @dest: Destination filename (for error messages).
-*
 * Exits(98) if read() fails, Exits(99) if write() fails.
 */
 void copy_content(int fd_from, int fd_to, char *src, char *dest)
@@ -62,18 +61,16 @@ char buffer[1024];
 
 while ((rd = read(fd_from, buffer, sizeof(buffer))) > 0)
 {
-
 wr = write(fd_to, buffer, rd);
-if (wr < 0 || wr != rd)  
+if (wr < 0 || wr != rd)
 {
 dprintf(STDERR_FILENO,
 "Error: Can't write to %s\n", dest);
 close(fd_from);
 close(fd_to);
-exit(99);  
+exit(99);
 }
 }
-
 
 if (rd < 0)
 {
@@ -81,7 +78,7 @@ dprintf(STDERR_FILENO,
 "Error: Can't read from file %s\n", src);
 close(fd_from);
 close(fd_to);
-exit(98);  
+exit(98);
 }
 }
 /**
@@ -103,7 +100,6 @@ exit(100);
 * main - Copies content of one file to another.
 * @ac: Argument count (must be 3).
 * @av: Array of arguments: cp file_from file_to
-*
 * Return: 0 on success, or exit codes on various failures:
 *  97 (usage), 98 (read error), 99 (write error), 100 (close error).
 */
