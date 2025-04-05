@@ -22,39 +22,43 @@ exit(100);
 * copy_content - Copies content from one file descriptor to another.
 * @fd_from: Source file descriptor.
 * @fd_to: Destination file descriptor.
+* @src: Source file name.
+* @dest: Destination file name.
 */
-void copy_content(int fd_from, int fd_to)
+void copy_content(int fd_from, int fd_to, char *src, char *dest)
 {
+ssize_t rd, wr;
 char buffer[BUFFER_SIZE];
-ssize_t read_bytes, written_bytes;
 
-while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
+while ((rd = read(fd_from, buffer, sizeof(buffer))) > 0)
 {
-written_bytes = write(fd_to, buffer, read_bytes);
-if (written_bytes == -1 || written_bytes != read_bytes)
+wr = write(fd_to, buffer, rd);
+if (wr < 0 || wr != rd)
 {
-dprintf(STDERR_FILENO, "Error: Can't write to %s\n", "NAME_OF_THE_FILE");
-close_file(fd_from);
-close_file(fd_to);
+dprintf(STDERR_FILENO,
+"Error: Can't write to %s\n", dest);
+close(fd_from);
+close(fd_to);
 exit(99);
 }
 }
 
-if (read_bytes == -1)
+if (rd < 0)
 {
-dprintf(STDERR_FILENO, "Error: Can't read from file\n");
-close_file(fd_from);
-close_file(fd_to);
+dprintf(STDERR_FILENO,
+"Error: Can't read from file %s\n", src);
+close(fd_from);
+close(fd_to);
 exit(98);
 }
 }
 
 /**
-* main - Entry point to copy file content.
-* @argc: Argument count.
-* @argv: Argument vector.
+* main - Copies the content of a file to another file.
+* @argc: The number of arguments passed to the program.
+* @argv: The argument vector.
 *
-* Return: 0 on success, exits with appropriate error code on failure.
+* Return: 0 on success, or an exit code on failure.
 */
 int main(int argc, char *argv[])
 {
@@ -73,7 +77,7 @@ dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 exit(98);
 }
 
-fd_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+fd_to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
 if (fd_to == -1)
 {
 dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
@@ -81,7 +85,7 @@ close_file(fd_from);
 exit(99);
 }
 
-copy_content(fd_from, fd_to);
+copy_content(fd_from, fd_to, argv[1], argv[2]);
 
 close_file(fd_from);
 close_file(fd_to);
