@@ -32,16 +32,18 @@ char buffer[BUFFER_SIZE];
 
 while ((rd = read(fd_from, buffer, sizeof(buffer))) > 0)
 {
+
 wr = write(fd_to, buffer, rd);
-if (wr < 0 || wr != rd)
+if (wr < 0 || wr != rd)  
 {
 dprintf(STDERR_FILENO,
 "Error: Can't write to %s\n", dest);
 close(fd_from);
 close(fd_to);
-exit(99);
+exit(99);  
 }
 }
+
 
 if (rd < 0)
 {
@@ -49,10 +51,9 @@ dprintf(STDERR_FILENO,
 "Error: Can't read from file %s\n", src);
 close(fd_from);
 close(fd_to);
-exit(98);
+exit(98);  
 }
 }
-
 /**
 * main - Copies the content of a file to another file.
 * @argc: The number of arguments passed to the program.
